@@ -26,17 +26,17 @@ void printtime()
 {
 	struct tm *ptr;
 	time_t it;
-    char str_time[100];
+	char str_time[100];
 	it = time(NULL);
 
 	ptr = localtime(&it);
 	sprintf(str_time,"%s",asctime(ptr));
 
-    int len = strlen(str_time);
+	int len = strlen(str_time);
 	str_time[len-1] = '\0';
 	printf("%s ",str_time);
 
-//	printf(ctime(&it));
+	//	printf(ctime(&it));
 }
 void send_ping()
 {
@@ -81,8 +81,10 @@ void recv_reply()
 	n=nrecv=0;
 	len=sizeof(from);	
 
-	while(1){
-		if((n=recvfrom(sockfd,recvbuf,sizeof recvbuf,0,(struct sockaddr *)&from,&len))<0){	
+	while(1)
+	{
+		if((n=recvfrom(sockfd,recvbuf,sizeof recvbuf,0,(struct sockaddr *)&from,&len))<0)
+		{	
 			if(errno==EINTR)	
 				continue;
 			bail("recvfrom error");
@@ -130,12 +132,9 @@ int handle_pkt()
 	struct timeval *sendtime;
 
 	ip=(struct iphdr *)recvbuf;
-        char cmdline[1024];
+	char cmdline[1024];
 	time_t now;
-	//time(&now);
 
-
-    //printf("%d\n",ip->tos);
 	ip_hlen=ip->hlen << 2;
 	ip_datalen=ntohs(ip->tot_len)-ip_hlen;
 
@@ -144,29 +143,17 @@ int handle_pkt()
 	if(checksum((u8 *)icmp,ip_datalen))	
 		return -1;
 
-
-	if(icmp->icmp_id == pid +1)
-	{
-		sendtime=(struct timeval *)icmp->data; 
-		rtt=((&recvtime)->tv_sec-sendtime->tv_sec)*1000+((&recvtime)->tv_usec-sendtime->tv_usec)/1000.0;
-
-		//printtime();
-		syslog(LOG_USER|LOG_INFO,"heart_beat %s %.3f ms\n",
-				inet_ntoa(from.sin_addr),	
-				rtt);
-		//system(cmdline);
-		time_out = 0;
-		if((setitimer(ITIMER_REAL,&val_alarm,NULL))==-1)	
-			bail("setitimer fails.");
-	}
-
 	if(icmp->icmp_id!=pid)
 		return -1;
+
+	up_ip++;
+	time_out = 0;
 
 	sendtime=(struct timeval *)icmp->data; 
 	rtt=((&recvtime)->tv_sec-sendtime->tv_sec)*1000+((&recvtime)->tv_usec-sendtime->tv_usec)/1000.0;
 
-    if(!fout)
+	//printf("fout:%d\n",fout);
+	if(!fout)
 	{
 		printf("%d bytes from %s:icmp_seq=%u ttl=%d rtt=%.3f ms\n",
 				ip_datalen, 
@@ -226,15 +213,11 @@ void int_handler(int sig)
 
 void alarm_handler(int signo)
 {
-    if(time_out==1)
+	time_out++;
+	if (time_out>180)
 	{
-		printtime();
-		printf(":nomal exit\n");
-		exit(1);
+		syslog(LOG_USER|LOG_INFO,"scanrecv timeout");
 	}
-	else
-	{
-		time_out=1;
-	}
+	syslog(LOG_USER|LOG_INFO,"scan up_ip_num %d",up_ip);
 }
 

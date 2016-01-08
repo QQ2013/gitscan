@@ -74,27 +74,28 @@ int main(int argc,char *argv[])
 	}
 	setsockopt(sockfd,IPPROTO_IP,IP_HDRINCL,&on,sizeof(on));  
 
-	val_alarm.it_interval.tv_sec = 60;	
+	val_alarm.it_interval.tv_sec = 1;	
 	val_alarm.it_interval.tv_usec=0;
 	val_alarm.it_value.tv_sec=0;
 	val_alarm.it_value.tv_usec=1;
- 
+	up_ip = 0;
+
 	set_sighandler();
 	time_out = 0;
 	if((setitimer(ITIMER_REAL,&val_alarm,NULL))==-1)	
 		bail("setitimer fails.");
 	recv_reply();
-    
+
 	fclose(fout);
 	return 0;
 }
 void usage()
 {
 	fprintf(stderr,
-	       "pingrecv [options] \n"
-		   "-p pid [=999]\n"
-           "-f result save file\n"
-		   "-h help\n"
-		   "please make sure ip is right!\n"
-		  );
+			"pingrecv [options] \n"
+			"-p pid [=999]\n"
+			"-f result save file\n"
+			"-h help\n"
+			"please make sure ip is right!\n"
+		   );
 }

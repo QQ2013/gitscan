@@ -77,5 +77,6 @@ char ip_beat[20];         /*ĞÄÌøip*/
 struct itimerval val_alarm;
 FILE *fout;
 int time_out;
+long up_ip;
 #endif
 

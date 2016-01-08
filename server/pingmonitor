@@ -5,6 +5,6 @@ grep pingsend /var/log/scan.log | tail
 echo ""
 echo ""
 echo ""
-echo pinrecv
+echo pingrecv
 date
 grep pingrecv /var/log/scan.log | tail
