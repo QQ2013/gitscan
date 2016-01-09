@@ -1,4 +1,6 @@
 #!/bin/sh
+echo ipscan start time
+cat ./ipscanst
 echo pingsend
 date
 grep pingsend /var/log/scan.log | tail

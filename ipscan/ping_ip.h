@@ -76,7 +76,7 @@ char ip_saddr[20];         /*源ip-接受ip*/
 char ip_beat[20];         /*心跳ip*/
 struct itimerval val_alarm;
 FILE *fout;
-int time_out;
+long time_out;
 long up_ip;
 #endif
 

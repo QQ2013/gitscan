@@ -147,7 +147,7 @@ int handle_pkt()
 		return -1;
 
 	up_ip++;
-	time_out = 0;
+	//time_out = 0;
 
 	sendtime=(struct timeval *)icmp->data; 
 	rtt=((&recvtime)->tv_sec-sendtime->tv_sec)*1000+((&recvtime)->tv_usec-sendtime->tv_usec)/1000.0;
@@ -214,10 +214,14 @@ void int_handler(int sig)
 void alarm_handler(int signo)
 {
 	time_out++;
-	if (time_out>180)
-	{
-		syslog(LOG_USER|LOG_INFO,"scanrecv timeout");
-	}
-	syslog(LOG_USER|LOG_INFO,"scan up_ip_num %d",up_ip);
+	int h = time_out/3600;
+	int m = time_out-h*3600;
+	m = m/60;
+	int s=time_out%60;
+	//	if (time_out>180)
+	//	{
+	//		syslog(LOG_USER|LOG_INFO,"scanrecv timeout");
+	//	}
+	syslog(LOG_USER|LOG_INFO,"up %d time %.2d:%.2d:%.2d",up_ip,h,m,s);
 }
 

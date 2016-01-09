@@ -171,14 +171,14 @@ int main(int argc,char *argv[])
 
 	int j = 0;
 	int sleep_time;
-	sleep_time = 1000/net_width;
+	sleep_time = 100*net_width;
 	char cmdline[1024];
 	printf("1");
 	while(1)
 	{	
 		sprintf(ip_daddr,"%d.%d.%d.%d",ip_send[0],ip_send[1],ip_send[2],ip_send[3]);
         
-		if (ip_send[2] == 128)
+		if (ip_send[3] == 1)
 		{
 			
 			sprintf(msg,"scan to %s",ip_daddr);
@@ -376,7 +376,7 @@ void usage()
 			"-s ip_start --need\n"
 			"-e ip_end [=the end of the start ip seg x.x.x.255 ]\n"
 			"-r ip_recv  --need\n"
-			"-w net width [1=]M\n"
+			"-w scan time width [1=]0.1ms\n"
 			"-p pid num[=999]\n"
 			"-n ping send times [=1]\n"
 			"-b ip_beat  --need\n"
