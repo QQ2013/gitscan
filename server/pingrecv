@@ -1,6 +1,6 @@
 #!/bin/sh
 cd ../ipscan
-exec ./pingrecv -p 9999 -f /scandata/ip/119.ip
+exec ./pingrecv -p 9999 -f /scandata/ip/113.ip
 
 
  

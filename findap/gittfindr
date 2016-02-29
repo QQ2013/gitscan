@@ -1,0 +1,2 @@
+grep 'find ture git bug' /var/log/scan.log |cat -n
+

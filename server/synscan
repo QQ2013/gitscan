@@ -1,3 +1,5 @@
 #!/bin/sh
+./logclean
+date > ./synscanst
 ./scanclient syn
  

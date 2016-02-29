@@ -1,3 +1,3 @@
 #/bin/sh
-awk {'print $1'} ../data/$1/$1.ipscan > ../syn/ip
+awk {'print $1'} /scandata/ip/$1.ip > /scandata/ip/$1.ipcut
 

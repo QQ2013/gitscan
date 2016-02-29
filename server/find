@@ -1,5 +1,5 @@
 #!/bin/sh
 cd ../findap
-exec ./findap.py http8080 > ../data/222/222.findap 
+exec ./poolfindap.py 200 50
 
  

@@ -1,0 +1,2 @@
+#!/bin/sh
+ps aux | grep ping |awk {'print $2'}|xargs -i kill -9 {} 

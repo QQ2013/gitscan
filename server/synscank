@@ -1,0 +1,2 @@
+#!/bin/sh
+ps aux | grep synscan |awk {'print $2'}|xargs -i kill -9 {} 

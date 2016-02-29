@@ -1,0 +1,2 @@
+#!/bin/sh
+grep findap /var/log/scan.log |grep  'find git'| awk {'print $10'} |cat -n

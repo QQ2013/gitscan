@@ -1,0 +1,2 @@
+#/bin/sh
+grep open /scandata/syn/$1.synscan | awk {'print "http://"$7"/.git/config"'} > ../findap/http80

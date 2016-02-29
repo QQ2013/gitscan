@@ -35,15 +35,15 @@ char ip[30];
 int times = 1;
 int main(int argc,char *argv)
 {
-    struct sockaddr_in addr;
+	struct sockaddr_in addr;
 	struct hostent *host;
 	char sourceip[30];
-	int i;
+	long i;
 	int on = 1;
 	pthread_t tid;
 	clock_t start;
 	int sleep_t=0;
-	
+
 	//////////////////////////////////////////////////
 	int opt = 0;
 	int options_index = 0;
@@ -51,7 +51,7 @@ int main(int argc,char *argv)
 	int net_width = 1;
 	int set[3];
 	char ip_file[1024];
-	
+
 
 	set[0] = 0;
 	set[1] = 0;
@@ -68,28 +68,28 @@ int main(int argc,char *argv)
 		switch(opt)
 		{
 			case 's':
-				      sprintf(sourceip,"%s",optarg);
-					  set[0] = 1;
-					  break;
+				sprintf(sourceip,"%s",optarg);
+				set[0] = 1;
+				break;
 			case 'f':
-					  sprintf(ip_file,"%s",optarg);
-					  set[1] = 1;
-					  break;
+				sprintf(ip_file,"%s",optarg);
+				set[1] = 1;
+				break;
 			case 'p':
-					  port = atoi(optarg);
-					  break; 
+				port = atoi(optarg);
+				break; 
 			case 'w':
-					  net_width = atoi(optarg);
-					  break; 
+				net_width = atoi(optarg);
+				break; 
 			case 'n':
-					  times = atoi(optarg);
-					  break; 
+				times = atoi(optarg);
+				break; 
 			case 't':
-					  sleep_t = atoi(optarg);
-					  break; 
+				sleep_t = atoi(optarg);
+				break; 
 			default:
-					  usage();
-					  return 0;
+				usage();
+				return 0;
 		}
 	}
 
@@ -120,15 +120,15 @@ int main(int argc,char *argv)
 	fclose(fp);
 
 	int sleep_num = 100*net_width;
-	
+
 	syslog(LOG_USER|LOG_INFO,"total:%d ip\n",ip_num);
 	//////////////////////////////////////////////////
 	start = clock();
-	
+
 	memset(&addr,0,sizeof(struct sockaddr_in));
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = inet_addr(ip);
-    addr.sin_port = htons(port);
+	addr.sin_port = htons(port);
 
 	if((sockfd = socket(AF_INET,SOCK_RAW,IPPROTO_TCP)) <= 0)
 	{
@@ -161,20 +161,20 @@ int main(int argc,char *argv)
 			printf("read addr error\n");
 			continue;
 		}
-	    addr.sin_addr.s_addr = inet_addr(ip);
+		addr.sin_addr.s_addr = inet_addr(ip);
 		send = times;
 		while(send)
 		{
-		    send_data(sockfd, &addr, sourceport, sourceip);
+			send_data(sockfd, &addr, sourceport, sourceip);
 			send --;
 			usleep(sleep_num);
 		}
 		i++;
 
-		if( i%10000 == 0)
+		if( i%(sleep_t*100) == 0)
 		{
 			syslog(LOG_USER|LOG_INFO,"send %d/%d %s  \n",i,ip_num,ip);	
-			usleep(sleep_t*1000);
+			usleep(sleep_t*10000);
 		}
 	}
 	fclose(fp);
@@ -204,7 +204,7 @@ void send_data(int sockfd, struct sockaddr_in *addr, int sourceport,char sourcei
 	tcpHeadLen = htons(sizeof(struct tcphdr));
 	head_len = sizeof(struct iphdr) + sizeof(struct tcphdr);
 	bzero(buffer,100);
-	
+
 	//ip
 	ip = (struct iphdr *)buffer;
 	ip->version = IPVERSION;
@@ -269,8 +269,8 @@ void *recv_packet(clock_t start)
 	int n;
 	float costtime;
 	clock_t end;
-    
-    ip = (struct iphdr*)(readbuff);
+
+	ip = (struct iphdr*)(readbuff);
 	tcp = (struct tcphdr*)(readbuff + 20);
 	ip4 = (char *) &ip->saddr;
 	for(n=0;n<ip_num*times+1;n++)
@@ -279,34 +279,34 @@ void *recv_packet(clock_t start)
 
 		if(size <(20+20))
 		{
-		//	printf("1\n");
+			//	printf("1\n");
 			continue;
 		}
 
 		if(ntohs(tcp->dest)!= sourceport)
 		{
-		//	printf("2\n");
+			//	printf("2\n");
 			continue;
 		}
 
 		if(tcp->rst&&tcp->ack)
 		{
-		//	printf("3\n");
+			//	printf("3\n");
 			continue;
 		}
 
 		if(tcp->ack&&tcp->syn)
 		{
-		//	printf("4\n");
+			//	printf("4\n");
 			syslog(LOG_USER|LOG_INFO,"recv %u.%u.%u.%u %5u open\n",ip4[0],ip4[1],ip4[2],ip4[3],(ntohs(tcp->source)));
 			continue;
 		} 
 		/*
-		if(tcp->ack)
-		{
+		   if(tcp->ack)
+		   {
 		//	printf("4\n");
-			printf("%u.%u.%u.%u %5u open\n",ip4[0],ip4[1],ip4[2],ip4[3],(ntohs(tcp->source)));
-			continue;
+		printf("%u.%u.%u.%u %5u open\n",ip4[0],ip4[1],ip4[2],ip4[3],(ntohs(tcp->source)));
+		continue;
 		} */
 
 	}
@@ -335,15 +335,15 @@ unsigned short check_sum(unsigned short *buffer, int size)
 void usage()
 {
 	fprintf(stderr,
-	       "pingrecv [options] \n"
-		   "-s sourceip\n"
-		   "-f ip file\n"
-		   "-w net width [=1]0.1ms\n"
-		   "-p port [=80]\n"
-		   "-n scan times[=1]\n"
-		   "-t sleep sec after 10000 scan  [=0]\n"
-		   "-h help\n"
-		   "please make sure ip is right!\n"
-		  );
+			"pingrecv [options] \n"
+			"-s sourceip\n"
+			"-f ip file\n"
+			"-w net width [=1]0.1ms\n"
+			"-p port [=80]\n"
+			"-n scan times[=1]\n"
+			"-t sleep sec after sleep scan  [=1] 0.1s\n"
+			"-h help\n"
+			"please make sure ip is right!\n"
+	       );
 
 }

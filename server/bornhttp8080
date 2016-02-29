@@ -1,2 +1,0 @@
-#/bin/sh
-grep open ../data/$1/$1.synscan | awk {'print "http://"$7":8080/"'} > ../findap/http8080

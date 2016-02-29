@@ -1,8 +1,22 @@
 #!/bin/sh
-echo findap 
+ps aux |grep server | grep -v grep
+echo findap start time
+cat findapst
+echo findap progress 
 date
-grep findap /var/log/scan.log | tail
+grep findap /var/log/scan.log | grep 'scan file' | tail -1
+grep findap /var/log/scan.log | grep scan |grep -v file  |tail -5
 
-echo findap 
+echo findap failed
 date
-tail ../data/222/222.findap
+grep findap /var/log/scan.log | grep failed | tail -5
+
+
+echo findap git
+date
+grep findap /var/log/scan.log | grep bug | tail -5
+
+echo findap git bug 
+date
+grep findap /var/log/scan.log | grep 'find git' | tail -5
+echo 'total:'+`grep findap /var/log/scan.log | grep -c 'find git'`

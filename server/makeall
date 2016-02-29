@@ -1,0 +1,12 @@
+#!/bin/sh
+make
+
+cd ../ipscan
+make clean
+make
+
+cd ../syn
+make clean
+make
+
+ 

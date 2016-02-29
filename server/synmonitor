@@ -1,4 +1,6 @@
 #!/bin/sh
+echo synscan start time
+cat ./synscanst
 echo synscan send
 date
 grep synscan /var/log/scan.log | grep send | tail
